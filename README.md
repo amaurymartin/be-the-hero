@@ -1,2 +1,2 @@
 # omnistack11
-From Omnistack week - Rocketseat
+From 11.0 Omnistack Week - Rocketseat
