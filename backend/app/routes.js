@@ -19,7 +19,6 @@ routes.get('/', (req, res) => {
 routes.post('/sessions', SessionsController.create);
 //routes.delete('/sessions', SessionsController.delete);
 
-
 //NGOs resource
 routes.post('/ngos', NgosController.create);
 routes.get('/ngos', NgosController.index);

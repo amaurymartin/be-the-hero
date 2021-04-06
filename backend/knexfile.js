@@ -1,5 +1,3 @@
-// Update with your config settings.
-
 module.exports = {
 
   development: {
@@ -19,7 +17,6 @@ module.exports = {
       directory: './db/seeds'
     }
   },
-
   staging: {
     client: 'postgresql',
     connection: {
@@ -35,7 +32,6 @@ module.exports = {
       tableName: 'db_migrations'
     }
   },
-
   production: {
     client: 'postgresql',
     connection: {
@@ -51,5 +47,4 @@ module.exports = {
       tableName: 'db_migrations'
     }
   }
-
 };
