@@ -1,5 +1,5 @@
 import React from 'react';
-
+import { Link } from 'react-router-dom';
 import { FiLogIn } from 'react-icons/fi';
 
 import './style.css';
@@ -18,10 +18,10 @@ export default function Login() {
         <input placeholder="Email"/>
         <input type= "password" placeholder="Password" />
         <button className="button" type="submit">Sign in</button>
-        <a href="/register">
+        <Link to="/register">
           <FiLogIn size={16} color="#e02041" />
           Sign up
-        </a>
+        </Link>
       </form>
 
       </section>
