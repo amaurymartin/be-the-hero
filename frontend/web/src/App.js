@@ -1,8 +1,10 @@
-import Header from './Header'
+import './global.css';
+
+import Routes from './routes';
 
 function App() {
   return (
-    <Header title='Be the Hero'/>
+    <Routes />
   );
 }
 
