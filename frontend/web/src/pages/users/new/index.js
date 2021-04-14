@@ -13,7 +13,7 @@ export default function NewUser() {
         <section>
           <img src={logoSvg} alt="Be the Hero"/>
 
-          <h1>New Non-Governmental Organization</h1>
+          <h1>New User</h1>
           <p>Make your registration, sign in and help people find the incidents of your NGO</p>
 
           <Link className="back-link" to="/">

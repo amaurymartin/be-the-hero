@@ -16,7 +16,7 @@ export default function NewIncident() {
           <h1>New incident</h1>
           <p>Describe the incident in detail to find a hero to solve it </p>
 
-          <Link className="back-link" to="/dashboard">
+          <Link className="back-link" to="/users/key">
             <FiArrowLeft size={16} color="#e02041" />
             Back
           </Link>

@@ -16,9 +16,9 @@ export default function NewOrganization() {
           <h1>New Non-Governmental Organization</h1>
           <p>Submit your Organization infos to be able to post your incidents</p>
 
-          <Link className="back-link" to="/">
+          <Link className="back-link" to="/users/key">
             <FiArrowLeft size={16} color="#e02041" />
-            Sign up
+            Back
           </Link>
         </section>
 
