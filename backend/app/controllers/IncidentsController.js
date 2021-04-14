@@ -1,17 +1,36 @@
-const connection = require('../../db/connection');
 const {
   v4: uuidv4,
 } = require('uuid');
+const connection = require('../../db/connection');
+
+async function checkOperation(ngoKey, incidentKey, res) {
+  if (!ngoKey) {
+    return res.status(401).json({ error: 'Not authorized' });
+  }
+
+  const incident = await connection('incidents').select('*').where({ key: incidentKey }).first();
+  if (!incident) {
+    return res.status(404).json({ error: 'Not found' });
+  }
+
+  const ngo = await connection('ngos').select('id').where({ key: ngoKey }).first();
+  if (ngo.id !== incident.ngo_id) {
+    return res.status(401).json({ error: 'Not authorized' });
+  }
+
+  return null;
+}
 
 module.exports = {
   async create(req, res) {
     const ngoKey = req.headers.authorization;
 
-    const ngo = await connection('ngos').select('id').where({key: ngoKey}).first();
-    if(!ngo)
-      return res.status(401).json({error: 'Not authorized'});
+    const ngo = await connection('ngos').select('id').where({ key: ngoKey }).first();
+    if (!ngo) {
+      return res.status(401).json({ error: 'Not authorized' });
+    }
 
-    let {title, description, value} = req.body;
+    const { title, description, value } = req.body;
     const key = uuidv4();
 
     // TODO: check uniques (key)
@@ -21,37 +40,38 @@ module.exports = {
       ngo_id: ngo.id,
       title,
       description,
-      value
+      value,
     });
 
     return res.status(201).json(
       {
-        key
-      }
+        key,
+      },
     );
   },
 
   async index(req, res) {
     const ngoKey = req.headers.authorization;
-    const {page = 0, size = 10, sort = 'id,DESC'} = req.query;
+    const { page = 0, size = 10, sort = 'id,DESC' } = req.query;
 
     let incidents = [];
     let total = 0;
-    if(ngoKey) {
-      const ngo = await connection('ngos').select('id').where({key: ngoKey}).first();
+    if (ngoKey) {
+      const ngo = await connection('ngos').select('id').where({ key: ngoKey }).first();
 
-      if(ngo) {
-        incidents = await connection('incidents').select('*').where({ngo_id: ngo.id})
-          .limit (size)
+      if (ngo) {
+        incidents = await connection('incidents').select('*').where({ ngo_id: ngo.id })
+          .limit(size)
           .offset(page * size)
-          .orderBy(sort.split(',')[0], sort.split(',')[1])
+          .orderBy(sort.split(',')[0], sort.split(',')[1]);
 
-        total = await connection('incidents').count('*').where({ngo_id: ngo.id}).first();
-      } else
-        return res.status(401).json({error: 'Not authorized'});
+        total = await connection('incidents').count('*').where({ ngo_id: ngo.id }).first();
+      } else {
+        return res.status(401).json({ error: 'Not authorized' });
+      }
     } else {
       incidents = await connection('incidents').select('*')
-        .limit (size)
+        .limit(size)
         .offset(page * size)
         .orderBy(sort.split(',')[0], sort.split(',')[1]);
 
@@ -68,10 +88,10 @@ module.exports = {
     const ngoKey = req.headers.authorization;
     const incidentKey = req.params.key;
 
-    res = checkOperation(ngoKey, incidentKey, res);
-    if(res) return res;
+    const response = checkOperation(ngoKey, incidentKey, res);
+    if (response) return response;
 
-    const incident = await connection('incidents').select('*').where({key: incidentKey}).first();
+    const incident = await connection('incidents').select('*').where({ key: incidentKey }).first();
 
     return res.json(incident);
   },
@@ -80,16 +100,16 @@ module.exports = {
     const ngoKey = req.headers.authorization;
     const incidentKey = req.params.key;
 
-    res = checkOperation(ngoKey, incidentKey, res);
-    if(res) return res;
+    const response = checkOperation(ngoKey, incidentKey, res);
+    if (response) return response;
 
-    let {title, description, value} = req.body;
+    const { title, description, value } = req.body;
 
     await connection('incidents').update({
       title,
       description,
-      value
-    }).where({key: incidentKey});
+      value,
+    }).where({ key: incidentKey });
 
     return res.json();
   },
@@ -98,12 +118,12 @@ module.exports = {
   //   const ngoKey = req.headers.authorization;
   //   const incidentKey = req.params.key;
 
-  //   res = checkOperation(ngoKey, incidentKey, res);
-  //   if(res) return res;
+  // const response = checkOperation(ngoKey, incidentKey, res);
+  // if (response) return response;
 
-  //   let {key, value} = req.body;
+  //   const { key, value } = req.body;
 
-  //   await connection('incidents').update().where({key: incidentKey});
+  //   await connection('incidents').update().where({key: incidentKey });
 
   //   return res.json();
   // },
@@ -112,24 +132,11 @@ module.exports = {
     const ngoKey = req.headers.authorization;
     const incidentKey = req.params.key;
 
-    res = checkOperation(ngoKey, incidentKey, res);
-    if(res) return res;
+    const response = checkOperation(ngoKey, incidentKey, res);
+    if (response) return response;
 
-    await connection('incidents').delete().where({key: incidentKey, ngo_id: ngo.id});
+    await connection('incidents').delete().where({ key: incidentKey });
 
     return res.status(204).send();
-  }
-};
-
-async function checkOperation(ngoKey, incidentKey, res) {
-  if(!ngoKey)
-    return res.status(401).json({error: 'Not authorized'});
-
-  const incident = await connection('incidents').select('*').where({key: incidentKey}).first();
-  if(!incident)
-    return res.status(404).json({error: 'Not found'});
-
-  const ngo = await connection('ngos').select('id').where({key: ngoKey}).first();
-  if(ngo.id !== incident.ngo_id)
-    return res.status(401).json({error: 'Not authorized'});
+  },
 };
