@@ -1,9 +1,11 @@
+/* eslint-disable */
+
 exports.up = function(knex) {
   return knex.schema.createTable('incidents', function(table) {
     table.increments();
 
-    table.integer('ngo_id').notNullable();
-    table.foreign('ngo_id').references('id').inTable('ngos');
+    table.integer('organization_id').notNullable();
+    table.foreign('organization_id').references('id').inTable('organizations');
 
     table.string('key').notNullable();
     table.string('title').notNullable();

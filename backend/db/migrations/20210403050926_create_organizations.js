@@ -1,5 +1,7 @@
+/* eslint-disable */
+
 exports.up = function(knex) {
-  return knex.schema.createTable('ngos', function(table) {
+  return knex.schema.createTable('organizations', function(table) {
     table.increments();
 
     table.string('key').notNullable();
@@ -20,5 +22,5 @@ exports.up = function(knex) {
 };
 
 exports.down = function(knex) {
-  return knex.schema.dropTable('ngos');
+  return knex.schema.dropTable('organizations');
 };
