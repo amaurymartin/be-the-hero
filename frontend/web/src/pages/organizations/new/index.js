@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { FiArrowLeft } from 'react-icons/fi';
 
 import './style.css';
@@ -18,6 +18,8 @@ export default function NewOrganization() {
   const [city, setCity] = useState('');
   const [state, setState] = useState('');
   const [country, setCountry] = useState('');
+
+  const history = useHistory();
 
   async function NewOrganization(event) {
     event.preventDefault();
@@ -38,10 +40,12 @@ export default function NewOrganization() {
       const response = await api.post('/organizations', payload)
 
       if(response.status === 201)
-        alert("Organization created!");
+        alert('Organization created!');
     } catch (error) {
-      alert("Error! Organization not created, try again!");
+      alert('Error! Organization not created, try again!');
     }
+
+    history.push('/');
   }
 
   return (
@@ -54,7 +58,7 @@ export default function NewOrganization() {
           <p>Submit your Organization infos to be able to post your incidents</p>
 
           <Link className="back-link" to="/users/key">
-            <FiArrowLeft size={16} color="#e02041" />
+            <FiArrowLeft size={16} color="#E02041" />
             Back
           </Link>
         </section>
