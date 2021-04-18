@@ -4,7 +4,8 @@ const {
 const connection = require('../../db/connection');
 
 async function getOrganization(organizationKey) {
-  const organization = connection('organizations').select('id').where({ key: organizationKey }).first();
+  const organization = await connection('organizations').select('id')
+    .where({ key: organizationKey }).first();
 
   return organization;
 }
@@ -23,7 +24,7 @@ module.exports = {
 
     if (!organizationKey) return res.status(403).json({ error: 'Forbidden' });
 
-    const organization = getOrganization(organizationKey);
+    const organization = await getOrganization(organizationKey);
     if (!organization) return res.status(401).json({ error: 'Not authorized' });
 
     const { title, description, value } = req.body;
@@ -54,7 +55,7 @@ module.exports = {
     let total = 0;
 
     if (organizationKey) {
-      const organization = getOrganization(organizationKey);
+      const organization = await getOrganization(organizationKey);
       if (!organization) return res.status(401).json({ error: 'Not authorized' });
 
       incidents = await connection('incidents').select('*')
@@ -85,14 +86,14 @@ module.exports = {
 
     let organization;
     if (organizationKey) {
-      organization = getOrganization(organizationKey);
+      organization = await getOrganization(organizationKey);
       if (!organization) return res.status(401).json({ error: 'Not authorized' });
     }
 
-    const incident = getIncident(incidentKey);
+    const incident = await getIncident(incidentKey);
     if (!incident) return res.status(404).json({ error: 'Not found' });
 
-    if (organization && (organization.id !== incident.id)) {
+    if (organization && (organization.id !== incident.organization_id)) {
       return res.status(401).json({ error: 'Not authorized' });
     }
 
@@ -105,13 +106,13 @@ module.exports = {
 
     if (!organizationKey) return res.status(403).json({ error: 'Forbidden' });
 
-    const organization = getOrganization(organizationKey);
+    const organization = await getOrganization(organizationKey);
     if (!organization) return res.status(401).json({ error: 'Not authorized' });
 
-    const incident = getIncident(incidentKey);
+    const incident = await getIncident(incidentKey);
     if (!incident) return res.status(404).json({ error: 'Not found' });
 
-    if (organization && (organization.id !== incident.id)) {
+    if (organization && (organization.id !== incident.organization_id)) {
       return res.status(401).json({ error: 'Not authorized' });
     }
 
@@ -132,13 +133,13 @@ module.exports = {
 
   //   if (!organizationKey) return res.status(403).json({ error: 'Forbidden' });
 
-  //   const organization = getOrganization(organizationKey);
+  //   const organization = await getOrganization(organizationKey);
   //   if (!organization) return res.status(401).json({ error: 'Not authorized' });
 
-  //   const incident = getIncident(incidentKey);
+  //   const incident = await getIncident(incidentKey);
   //   if (!incident) return res.status(404).json({ error: 'Not found' });
 
-  //   if (organization && (organization.id !== incident.id)) {
+  //   if (organization && (organization.id !== incident.organization_id)) {
   //     return res.status(401).json({ error: 'Not authorized' });
   //   }
 
@@ -155,13 +156,13 @@ module.exports = {
 
     if (!organizationKey) return res.status(403).json({ error: 'Forbidden' });
 
-    const organization = getOrganization(organizationKey);
+    const organization = await getOrganization(organizationKey);
     if (!organization) return res.status(401).json({ error: 'Not authorized' });
 
-    const incident = getIncident(incidentKey);
+    const incident = await getIncident(incidentKey);
     if (!incident) return res.status(404).json({ error: 'Not found' });
 
-    if (organization && (organization.id !== incident.id)) {
+    if (organization && (organization.id !== incident.organization_id)) {
       return res.status(401).json({ error: 'Not authorized' });
     }
 
