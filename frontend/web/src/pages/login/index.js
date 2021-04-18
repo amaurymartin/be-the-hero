@@ -18,7 +18,7 @@ export default function Login() {
         <input placeholder="Email"/>
         <input type= "password" placeholder="Password" />
         <button className="button" type="submit">Sign in</button>
-        <Link className="back-link" to="/users/new">
+        <Link className="back-link" to="/organizations/new">
           <FiLogIn size={16} color="#e02041" />
           Sign up
         </Link>

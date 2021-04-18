@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FiArrowLeft } from 'react-icons/fi';
 
@@ -6,7 +6,44 @@ import './style.css';
 
 import logoSvg from '../../../assets/logo.svg';
 
+import api from '../../../services/api';
+
 export default function NewOrganization() {
+  const [organizationName, setOrganizationName] = useState('');
+  const [nickname, setNickname] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [whatsapp, setWhatsapp] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [city, setCity] = useState('');
+  const [state, setState] = useState('');
+  const [country, setCountry] = useState('');
+
+  async function NewOrganization(event) {
+    event.preventDefault();
+
+    const payload = {
+      name: organizationName,
+      nickname: nickname,
+      email: email,
+      password: password,
+      confirmPassword: confirmPassword,
+      whatsapp: whatsapp,
+      city: city,
+      state: state,
+      country: country,
+    };
+
+    try {
+      const response = await api.post('/organizations', payload)
+
+      if(response.status === 201)
+        alert("Organization created!");
+    } catch (error) {
+      alert("Error! Organization not created, try again!");
+    }
+  }
+
   return (
     <div className="new-organization-container">
       <div className="content">
@@ -22,14 +59,59 @@ export default function NewOrganization() {
           </Link>
         </section>
 
-        <form>
-          <input placeholder="Name"/>
-          <input placeholder="Nickname"/>
-          <input type= "email" placeholder="Email"/>
-          <input type= "whatsapp" placeholder="Whatsapp"/>
-          <input type= "city" placeholder="City"/>
-          <input type= "state" placeholder="State"/>
-          <input type= "country" placeholder="Country"/>
+        <form onSubmit={NewOrganization}>
+          <input
+            placeholder="Name"
+            value={organizationName}
+            onChange={e => setOrganizationName(e.target.value)}
+          />
+          <input
+            placeholder="Nickname"
+            value={nickname}
+            onChange={e => setNickname(e.target.value)}
+          />
+          <input
+            type= "email"
+            placeholder="Email"
+            value={email}
+            onChange={e => setEmail(e.target.value)}
+          />
+          <input
+            type= "password"
+            placeholder="Password"
+            value={password}
+            onChange={e => setPassword(e.target.value)}
+          />
+          <input
+            type= "password"
+            placeholder="Confirm password"
+            value={confirmPassword}
+            onChange={e => setConfirmPassword(e.target.value)}
+          />
+          <input
+            type= "whatsapp"
+            placeholder="Whatsapp"
+            value={whatsapp}
+            onChange={e => setWhatsapp(e.target.value)}
+          />
+          <input
+            type= "city"
+            placeholder="City"
+            value={city}
+            onChange={e => setCity(e.target.value)}
+          />
+          <input
+            type= "state"
+            placeholder="State"
+            value={state}
+            onChange={e => setState(e.target.value)}
+          />
+          <input
+            type= "country"
+            placeholder="Country"
+            value={country}
+            onChange={e => setCountry(e.target.value)}
+          />
 
           <button className="button" type="submit">Create Organization</button>
         </form>
