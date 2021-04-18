@@ -1,12 +1,51 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useHistory } from 'react-router-dom';
 import { FiArrowLeft } from 'react-icons/fi';
 
 import './style.css';
 
 import logoSvg from '../../../assets/logo.svg';
 
+import api from '../../../services/api';
+
 export default function NewIncident() {
+  const history = useHistory();
+
+  const [ authorization, setAuthorization ] = useState([]);
+
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+  const [value, setValue] = useState('');
+
+  useEffect(() => {
+    setAuthorization(localStorage.getItem('Authorization'));
+  }, [authorization]);
+
+  async function NewIncident(event) {
+    event.preventDefault();
+
+    const headers = {
+      authorization: authorization,
+    };
+
+    const payload = {
+      title: title,
+      description: description,
+      value: value,
+    };
+
+    try {
+      const response = await api.post('/incidents', payload, { headers: headers })
+
+      if(response.status === 201) {
+        alert("Incident created!");
+        history.push(`/organizations/${authorization}`);
+      }
+    } catch (error) {
+      alert("Error! Incident not created, try again!");
+    }
+  }
+
   return (
     <div className="new-incident-container">
       <div className="content">
@@ -22,10 +61,23 @@ export default function NewIncident() {
           </Link>
         </section>
 
-        <form>
-          <input placeholder="Title"/>
-          <textarea placeholder="Description"/>
-          <input type="number" placeholder="Value"/>
+        <form onSubmit={NewIncident}>
+          <input
+            placeholder="Title"
+            value={title}
+            onChange={e => setTitle(e.target.value)}
+          />
+          <textarea
+            placeholder="Description"
+            value={description}
+            onChange={e => setDescription(e.target.value)}
+          />
+          <input
+            type="number"
+            placeholder="Value"
+            value={value}
+            onChange={e => setValue(e.target.value)}
+          />
 
           <button className="button" type="submit">Create incident</button>
         </form>
