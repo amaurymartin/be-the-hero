@@ -21,29 +21,32 @@ export default function NewOrganization() {
 
   const history = useHistory();
 
-  async function NewOrganization(event) {
+  async function newOrganization(event) {
     event.preventDefault();
 
     const payload = {
       name: organizationName,
-      nickname: nickname,
-      email: email,
-      password: password,
-      confirmPassword: confirmPassword,
-      whatsapp: whatsapp,
-      city: city,
-      state: state,
-      country: country,
+      nickname,
+      email,
+      password,
+      confirmPassword,
+      whatsapp,
+      city,
+      state,
+      country,
     };
 
-    try {
-      const response = await api.post('/organizations', payload)
+    let message;
 
-      if(response.status === 201)
-        alert('Organization created!');
+    try {
+      const response = await api.post('/organizations', payload);
+
+      if (response.status === 201) message = 'Organization created!';
     } catch (error) {
-      alert('Error! Organization not created, try again!');
+      message = 'Error! Organization not created, try again!';
     }
+
+    alert(message);
 
     history.push('/');
   }
@@ -52,69 +55,70 @@ export default function NewOrganization() {
     <div className="new-organization-container">
       <div className="content">
         <section>
-          <img src={logoSvg} alt="Be the Hero"/>
+          <img src={logoSvg} alt="Be the Hero" />
 
           <h1>New Non-Governmental Organization</h1>
           <p>Submit your Organization infos to be able to post your incidents</p>
 
+          {/* TODO: FIX this back link */}
           <Link className="back-link" to="/users/key">
             <FiArrowLeft size={16} color="#E02041" />
             Back
           </Link>
         </section>
 
-        <form onSubmit={NewOrganization}>
+        <form onSubmit={newOrganization}>
           <input
             placeholder="Name"
             value={organizationName}
-            onChange={e => setOrganizationName(e.target.value)}
+            onChange={(e) => setOrganizationName(e.target.value)}
           />
           <input
             placeholder="Nickname"
             value={nickname}
-            onChange={e => setNickname(e.target.value)}
+            onChange={(e) => setNickname(e.target.value)}
           />
           <input
-            type= "email"
+            type="email"
             placeholder="Email"
             value={email}
-            onChange={e => setEmail(e.target.value)}
+            onChange={(e) => setEmail(e.target.value)}
           />
           <input
-            type= "password"
+            type="password"
             placeholder="Password"
             value={password}
-            onChange={e => setPassword(e.target.value)}
+            onChange={(e) => setPassword(e.target.value)}
           />
           <input
-            type= "password"
+            type="password"
             placeholder="Confirm password"
             value={confirmPassword}
-            onChange={e => setConfirmPassword(e.target.value)}
+            onChange={(e) => setConfirmPassword(e.target.value)}
           />
           <input
-            type= "whatsapp"
+            type="whatsapp"
             placeholder="Whatsapp"
             value={whatsapp}
-            onChange={e => setWhatsapp(e.target.value)}
+            onChange={(e) => setWhatsapp(e.target.value)}
           />
           <input
-            type= "city"
+            type="city"
             placeholder="City"
             value={city}
-            onChange={e => setCity(e.target.value)}
+            onChange={(e) => setCity(e.target.value)}
           />
           <input
-            type= "state"
+            type="state"
             placeholder="State"
             value={state}
-            onChange={e => setState(e.target.value)}
+            onChange={(e) => setState(e.target.value)}
           />
           <input
-            type= "country"
+            type="country"
             placeholder="Country"
             value={country}
-            onChange={e => setCountry(e.target.value)}
+            onChange={(e) => setCountry(e.target.value)}
           />
 
           <button className="button" type="submit">Create Organization</button>
