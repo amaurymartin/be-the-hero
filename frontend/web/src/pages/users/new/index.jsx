@@ -20,27 +20,30 @@ export default function NewUser() {
 
     const payload = {
       name: userName,
-      nickname: nickname,
-      email: email,
-      password: password,
-      confirmPassword: confirmPassword,
+      nickname,
+      email,
+      password,
+      confirmPassword,
     };
 
-    try {
-      const response = await api.post('/users', payload)
+    let message;
 
-      if(response.status === 201)
-        alert("User created!");
+    try {
+      const response = await api.post('/users', payload);
+
+      if (response.status === 201) message = 'User created!';
     } catch (error) {
-      alert("Error! User not created, try again!");
+      message = 'Error! User not created, try again!';
     }
+
+    alert(message);
   }
 
   return (
     <div className="new-user-container">
       <div className="content">
         <section>
-          <img src={logoSvg} alt="Be the Hero"/>
+          <img src={logoSvg} alt="Be the Hero" />
 
           <h1>New User</h1>
           <p>Make your registration, sign in and help people find the incidents of your NGO</p>
@@ -55,30 +58,30 @@ export default function NewUser() {
           <input
             placeholder="Name"
             value={userName}
-            onChange={e => setUserName(e.target.value)}
+            onChange={(e) => setUserName(e.target.value)}
           />
           <input
             placeholder="Nickname"
             value={nickname}
-            onChange={e => setNickname(e.target.value)}
+            onChange={(e) => setNickname(e.target.value)}
           />
           <input
-            type= "email"
+            type="email"
             placeholder="Email"
             value={email}
-            onChange={e => setEmail(e.target.value)}
+            onChange={(e) => setEmail(e.target.value)}
           />
           <input
-            type= "password"
+            type="password"
             placeholder="Password"
             value={password}
-            onChange={e => setPassword(e.target.value)}
+            onChange={(e) => setPassword(e.target.value)}
           />
           <input
-            type= "password"
+            type="password"
             placeholder="Confirm password"
             value={confirmPassword}
-            onChange={e => setConfirmPassword(e.target.value)}
+            onChange={(e) => setConfirmPassword(e.target.value)}
           />
 
           <button className="button" type="submit">Create account</button>
