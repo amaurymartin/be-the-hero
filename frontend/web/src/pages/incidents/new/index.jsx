@@ -11,7 +11,7 @@ import api from '../../../services/api';
 export default function NewIncident() {
   const history = useHistory();
 
-  const [ authorization, setAuthorization ] = useState([]);
+  const [authorization, setAuthorization] = useState([]);
 
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -21,28 +21,22 @@ export default function NewIncident() {
     setAuthorization(localStorage.getItem('Authorization'));
   }, [authorization]);
 
-  async function NewIncident(event) {
+  async function newIncident(event) {
     event.preventDefault();
 
-    const headers = {
-      authorization: authorization,
-    };
+    const headers = { authorization };
 
-    const payload = {
-      title: title,
-      description: description,
-      value: value,
-    };
+    const payload = { title, description, value };
 
     try {
-      const response = await api.post('/incidents', payload, { headers: headers })
+      const response = await api.post('/incidents', payload, { headers });
 
-      if(response.status === 201) {
-        alert("Incident created!");
+      if (response.status === 201) {
+        alert('Incident created!');
         history.push(`/organizations/${authorization}`);
       }
     } catch (error) {
-      alert("Error! Incident not created, try again!");
+      alert('Error! Incident not created, try again!');
     }
   }
 
@@ -50,7 +44,7 @@ export default function NewIncident() {
     <div className="new-incident-container">
       <div className="content">
         <section>
-          <img src={logoSvg} alt="Be the Hero"/>
+          <img src={logoSvg} alt="Be the Hero" />
 
           <h1>New incident</h1>
           <p>Describe the incident in detail to find a hero to solve it </p>
@@ -61,22 +55,22 @@ export default function NewIncident() {
           </Link>
         </section>
 
-        <form onSubmit={NewIncident}>
+        <form onSubmit={newIncident}>
           <input
             placeholder="Title"
             value={title}
-            onChange={e => setTitle(e.target.value)}
+            onChange={(e) => setTitle(e.target.value)}
           />
           <textarea
             placeholder="Description"
             value={description}
-            onChange={e => setDescription(e.target.value)}
+            onChange={(e) => setDescription(e.target.value)}
           />
           <input
             type="number"
             placeholder="Value"
             value={value}
-            onChange={e => setValue(e.target.value)}
+            onChange={(e) => setValue(e.target.value)}
           />
 
           <button className="button" type="submit">Create incident</button>
