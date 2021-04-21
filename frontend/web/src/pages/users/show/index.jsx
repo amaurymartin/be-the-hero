@@ -58,7 +58,7 @@ export default function ShowUser() {
       <header>
         <img src={logoSvg} alt="Be the Hero" />
         <span>
-          Welcome,
+          { 'Welcome, ' }
           {userNickname}
           !
         </span>

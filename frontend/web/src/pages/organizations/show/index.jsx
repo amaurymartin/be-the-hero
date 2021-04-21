@@ -58,7 +58,7 @@ export default function ShowOrganization() {
       <header>
         <img src={logoSvg} alt="Be the Hero" />
         <span>
-          Welcome,
+          { 'Welcome, ' }
           {organizationNickname}
           !
         </span>
