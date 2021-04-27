@@ -1,32 +1,54 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Image, Text, TouchableOpacity, Linking } from 'react-native';
 import { Feather } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import * as MailComposer from 'expo-mail-composer';
 
 import style from './style';
 
 import logo from '../../../assets/logo.png';
 
+import api from '../../../services/api';
+
 export default function ShowIncident() {
   const navigation = useNavigation();
-  const heroMessage = 'I\'m the hero';
+  const route = useRoute();
+
+  const incidentKey = route.params.key;
+  const [incident, setIncident] = useState({});
+
+  // TODO: fix backend and replace organizationNickname
+  // TODO: break this string in multiple lines with no \n
+  const heroMessage = `Hello, ${incident.key},
+    I'm contacting you because I would like to help with ${incident.title} incident donating ${Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(incident.value)} BRL to you!
+    I hope this help you`;
 
   function navigate() {
     navigation.goBack();
   }
 
+  async function showIncident() {
+    const response = await api.get(`/incidents/${incidentKey}`)
+    setIncident(response.data);
+  }
+
   function sendWhatsapp() {
-    Linking.openURL(`whatsapp://send?phone=5585&text=${heroMessage}`);
+    // TODO: remove this const and set phone = ${incident.organization.whatsapp} after fix backend
+    const phone = '55859';
+    Linking.openURL(`whatsapp://send?phone=${phone}&text=${heroMessage}`);
   }
 
   function sendMail() {
     MailComposer.composeAsync({
-      subject: '',
-      recipients: [],
+      subject: `Hero of incident: ${incident.title}`,
+      recipients: [], // TODO: fix backend and replace with incident.organization.email
       body: heroMessage,
     });
   }
+
+  useEffect(() => {
+    showIncident();
+  }, []);
 
   return (
     <View style={style.container}>
@@ -40,13 +62,20 @@ export default function ShowIncident() {
 
       <View style={style.incident}>
         <Text style={[style.incidentProperty, { marginTop: 0 }]}>ORG:</Text>
-        <Text style={style.incidentValue}>ORG123</Text>
+        {/* TODO: fix backend to return something like: {incident.organization.name} */}
+        <Text style={style.incidentValue}>{incident.key}</Text>
 
         <Text style={style.incidentProperty}>CASO:</Text>
-        <Text style={style.incidentValue}>CASE123</Text>
+        <Text style={style.incidentValue}>{incident.title}</Text>
+        <Text style={style.incidentValue}>{incident.description}</Text>
 
         <Text style={style.incidentProperty}>VALUE:</Text>
-        <Text style={style.incidentValue}>12345.67</Text>
+        <Text style={style.incidentValue}>
+          {
+            Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' })
+              .format(incident.value)
+          }
+        </Text>
       </View>
 
       <View style={style.contact}>
