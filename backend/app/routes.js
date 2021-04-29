@@ -7,12 +7,8 @@ const OrganizationsController = require('./controllers/OrganizationsController')
 const IncidentsController = require('./controllers/IncidentsController');
 
 // Home
-routes.get('/', (req, res) => {
-  res.json(
-    {
-      message: 'Hello World!',
-    },
-  );
+routes.get('/healthcheck', (_req, res) => {
+  res.status(204).send();
 });
 
 // Sessions resource
