@@ -37,17 +37,113 @@ routes.post('/organizations', celebrate({
   }),
 }), OrganizationsController.create);
 routes.get('/organizations', OrganizationsController.index);
-routes.get('/organizations/:key', OrganizationsController.show);
-routes.put('/organizations/:key', OrganizationsController.update);
-// routes.patch('/organizations/:key', OrganizationsController.patch);
-routes.delete('/organizations/:key', OrganizationsController.delete);
+routes.get('/organizations/:key', celebrate({
+  [Segments.HEADERS]: Joi.object({
+    authorization: Joi.string().required().uuid(),
+  }).unknown(),
+  [Segments.PARAMS]: Joi.object().keys({
+    key: Joi.string().required().uuid(),
+  }),
+}), OrganizationsController.show);
+routes.put('/organizations/:key', celebrate({
+  [Segments.HEADERS]: Joi.object({
+    authorization: Joi.string().required().uuid(),
+  }).unknown(),
+  [Segments.PARAMS]: Joi.object().keys({
+    key: Joi.string().required().uuid(),
+  }),
+  [Segments.BODY]: Joi.object().keys({
+    name: Joi.string().required(),
+    nickname: Joi.string(),
+    email: Joi.string().required().email(),
+    whatsapp: Joi.string().required().min(10).max(11), // Brazilian phoneNumber pattern
+    city: Joi.string().required(),
+    state: Joi.string().required(),
+    country: Joi.string(),
+  }),
+}), OrganizationsController.update);
+// routes.patch('/organizations/:key', celebrate({
+//   [Segments.HEADERS]: Joi.object({
+//     authorization: Joi.string().required().uuid(),
+//   }).unknown(),
+//   [Segments.PARAMS]: Joi.object().keys({
+//     key: Joi.string().required().uuid(),
+//   }),
+//   [Segments.BODY]: Joi.object().keys({
+//     key: Joi.string().required().allow('password'),
+//     value: Joi.string().required(),
+//   }),
+// }), OrganizationsController.patch);
+routes.delete('/organizations/:key', celebrate({
+  [Segments.HEADERS]: Joi.object({
+    authorization: Joi.string().required().uuid(),
+  }).unknown(),
+  [Segments.PARAMS]: Joi.object().keys({
+    key: Joi.string().required().uuid(),
+  }),
+}), OrganizationsController.delete);
 
 // Incidents resource
-routes.post('/incidents', IncidentsController.create);
-routes.get('/incidents', IncidentsController.index);
-routes.get('/incidents/:key', IncidentsController.show);
-routes.put('/incidents/:key', IncidentsController.update);
-// routes.patch('/incidents/:key', IncidentsController.patch);
-routes.delete('/incidents/:key', IncidentsController.delete);
+routes.post('/incidents', celebrate({
+  [Segments.HEADERS]: Joi.object({
+    authorization: Joi.string().required().uuid(),
+  }).unknown(),
+  [Segments.BODY]: Joi.object().keys({
+    title: Joi.string().required(),
+    description: Joi.string().optional(),
+    value: Joi.number().required().min(0.01),
+  }),
+}), IncidentsController.create);
+routes.get('/incidents', celebrate({
+  [Segments.HEADERS]: Joi.object({
+    authorization: Joi.string().optional().uuid(),
+  }).unknown(),
+  [Segments.QUERY]: Joi.object().keys({
+    page: Joi.number().optional().min(0),
+    size: Joi.number().optional().min(1),
+    sort: Joi.string().optional(),
+  }),
+}), IncidentsController.index);
+routes.get('/incidents/:key', celebrate({
+  [Segments.HEADERS]: Joi.object({
+    authorization: Joi.string().optional().uuid(),
+  }).unknown(),
+  [Segments.PARAMS]: Joi.object().keys({
+    key: Joi.string().required().uuid(),
+  }),
+}), IncidentsController.show);
+routes.put('/incidents/:key', celebrate({
+  [Segments.HEADERS]: Joi.object({
+    authorization: Joi.string().required().uuid(),
+  }).unknown(),
+  [Segments.PARAMS]: Joi.object().keys({
+    key: Joi.string().required().uuid(),
+  }),
+  [Segments.BODY]: Joi.object().keys({
+    title: Joi.string().required(),
+    description: Joi.string().optional(),
+    value: Joi.number().optional().min(0.01),
+  }),
+}), IncidentsController.update);
+// routes.patch('/incidents/:key', celebrate({
+//   [Segments.HEADERS]: Joi.object({
+//     authorization: Joi.string().required().uuid(),
+//   }).unknown(),
+//   [Segments.PARAMS]: Joi.object().keys({
+//     key: Joi.string().required().uuid(),
+//   }),
+//   [Segments.BODY]: Joi.object().keys({
+//     key: Joi.string().required().allow('value'),
+//     value: Joi.number().required().min(0.01),
+//   }),
+// }), IncidentsController.patch);
+routes.delete('/incidents/:key', celebrate({
+  [Segments.HEADERS]: Joi.object({
+    authorization: Joi.string().required().uuid(),
+  }).unknown(),
+  [Segments.PARAMS]: Joi.object().keys({
+    key: Joi.string().required().uuid(),
+  }),
+}), IncidentsController.delete);
 
 module.exports = routes;
