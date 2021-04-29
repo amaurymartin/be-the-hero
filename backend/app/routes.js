@@ -13,7 +13,12 @@ routes.get('/healthcheck', (_req, res) => {
 });
 
 // Sessions resource
-routes.post('/sessions', SessionsController.create);
+routes.post('/sessions', celebrate({
+  [Segments.BODY]: Joi.object().keys({
+    email: Joi.string().required().email(),
+    password: Joi.string().required().min(6),
+  }),
+}), SessionsController.create);
 
 // Users resource
 // routes.post('/users', UsersController.create);
