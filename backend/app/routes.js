@@ -1,4 +1,5 @@
 const express = require('express');
+const { celebrate, Segments, Joi } = require('celebrate');
 
 const routes = express.Router();
 
@@ -23,7 +24,18 @@ routes.post('/sessions', SessionsController.create);
 // routes.delete('/users/:key', UsersController.delete);
 
 // Organizations resource
-routes.post('/organizations', OrganizationsController.create);
+routes.post('/organizations', celebrate({
+  [Segments.BODY]: Joi.object().keys({
+    name: Joi.string().required(),
+    nickname: Joi.string(),
+    email: Joi.string().required().email(),
+    password: Joi.string().required().min(6),
+    whatsapp: Joi.string().required().min(10).max(11), // Brazilian phoneNumber pattern
+    city: Joi.string().required(),
+    state: Joi.string().required(),
+    country: Joi.string(),
+  }),
+}), OrganizationsController.create);
 routes.get('/organizations', OrganizationsController.index);
 routes.get('/organizations/:key', OrganizationsController.show);
 routes.put('/organizations/:key', OrganizationsController.update);
