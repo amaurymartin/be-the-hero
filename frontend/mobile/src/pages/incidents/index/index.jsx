@@ -24,10 +24,14 @@ export default function IndexIncidents() {
     if (loading) return;
 
     if (total > 0 && incidents.length === total) return;
-    const response = await api.get('/incidents');
+    setLoading(true);
 
-    setIncidents(response.data);
+    const response = await api.get('/incidents', {
+      params: { page }
+    });
+    setIncidents([...incidents, ...response.data]);
     setTotal(response.headers['x-total-count'] || 0);
+    setPage(page + 1);
     setLoading(false);
   }
 
@@ -52,6 +56,7 @@ export default function IndexIncidents() {
         style={style.incidents}
         keyExtractor={incident => String(incident.key)}
         showsVerticalScrollIndicator={false}
+        onEndReached={indexIncidents}
         renderItem={({ item: incident }) => (
           <View style={style.incident}>
             <Text style={style.incidentProperty}>ORG:</Text>
