@@ -1,7 +1,6 @@
-const {
-  v4: uuidv4,
-} = require('uuid');
 const connection = require('../../db/connection');
+
+const keyable = require('../utils/keyable');
 
 module.exports = {
   async create(req, res) {
@@ -9,7 +8,7 @@ module.exports = {
       name, nickname = name.split(' ')[0], email, password, whatsapp, city, state, country,
     } = req.body;
 
-    const key = uuidv4();
+    const key = keyable();
 
     // TODO: check uniques (key, email, whatsapp)
 

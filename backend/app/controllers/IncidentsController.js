@@ -1,7 +1,6 @@
-const {
-  v4: uuidv4,
-} = require('uuid');
 const connection = require('../../db/connection');
+
+const keyable = require('../utils/keyable');
 
 async function getOrganization(organizationKey) {
   const organization = await connection('organizations').select('id')
@@ -28,7 +27,7 @@ module.exports = {
     if (!organization) return res.status(401).json({ error: 'Not authorized' });
 
     const { title, description, value } = req.body;
-    const key = uuidv4();
+    const key = keyable();
 
     // TODO: check uniques (key)
 
